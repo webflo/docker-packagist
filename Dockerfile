@@ -10,9 +10,6 @@ EXPOSE 22
 EXPOSE 80
 EXPOSE 3306
 
-ENV MYSQL_DATABASE_NAME "packagist"
-ENV PACKAGIST_HOST "packagist"
-
 RUN /build/scripts/prepare.sh && \
   /build/scripts/install-mysql.sh && \
   /build/scripts/install-packagist.sh && \
