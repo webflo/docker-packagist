@@ -1,0 +1,93 @@
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_name: packagist
+    database_user: root
+    database_password:
+
+    mailer_transport:
+    mailer_host: localhost
+    mailer_user:
+    mailer_password:
+    mailer_from_email: admin@example.org
+    mailer_from_name: Admin Team
+
+    # packagist_host: example.org
+    # router.request_context.host: %packagist_host%
+    # router.request_context.scheme: https
+
+    redis_dsn: redis://localhost/1
+
+    locale: en
+
+    google_analytics:
+        ga_key:
+
+    # set those to values obtained by creating an application at https://github.com/settings/applications
+    github.client_id: foo
+    github.client_secret: bar
+
+        # -- performance features --
+        # set both to apc to optimize things if it is available
+    validation_cache_backend: ~
+    doctrine_cache_backend: array
+
+        # -- security features --
+    secret: foo
+    remember_me.secret: bar
+
+        # set to true to enforce ssl, make sure you have a proper certificate in place
+    force_ssl: false
+        # e.g. [127.0.0.1] if the app is running behind a reverse proxy on localhost
+    trusted_proxies: ~
+        # e.g. ['.*\.?packagist\.org$'] to allow packagist.org and all subdomains as valid hosts
+    trusted_hosts: ~
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     'localhost'
+            port:     5672
+            user:     'guest'
+            password: 'guest'
+            vhost:    '/'
+    rpc_servers:
+        update_packages:
+            connection: default
+            callback:   packagist.background_package_updater
+        add_packages:
+            connection: default
+            callback:   packagist.background_package_adder
+    rpc_clients:
+        add_packages:
+            connection: default
+        update_packages:
+            connection: default
+    producers:
+        add_packages:
+            connection: default
+            exchange_options:
+                type: direct
+                name: add-packages
+        update_packages:
+            connection: default
+            exchange_options:
+                type: direct
+                name: update-packages
+    consumers:
+        add_packages:
+            connection: default
+            queue_options:
+                name: add-packages
+            exchange_options:
+                type: direct
+                name: add-packages
+            callback: packagist.background_package_upsert_consumer
+        update_packages:
+            connection: default
+            queue_options:
+                name: update-packages
+            exchange_options:
+                type: direct
+                name: update-packages
+            callback: packagist.background_package_updater

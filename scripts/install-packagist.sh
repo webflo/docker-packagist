@@ -3,15 +3,13 @@ set -e
 source /build/buildconfig
 set -x
 
-$minimal_apt_get_install curl git nginx php5-fpm php5-cli php5-intl php5-json daemontools
+$minimal_apt_get_install curl git nginx php5-fpm php5-cli php5-intl php5-json php5-curl daemontools
 
 if [ ! -d /var/www ]; then
   mkdir -p /var/www
 fi
 
-git clone https://github.com/composer/packagist.git /var/www/packagist
-
-chown -R www-data:www-data /var/www && chmod -R 775 /var/www/packagist
+git clone https://github.com/drupal-composer/drupal-packagist.git /var/www/packagist
 
 sed -e 's/;daemonize = yes/daemonize = no/' -i /etc/php5/fpm/php-fpm.conf
 sed -e 's/;listen\.owner/listen.owner/' -i /etc/php5/fpm/pool.d/www.conf
