@@ -5,6 +5,6 @@ set -x
 
 set +e
 cd  /var/www/packagist
-/usr/share/composer/composer.phar install --no-interaction --no-dev --prefer-dist
+composer install --no-interaction --no-dev --prefer-dist
 
 exit 0
